@@ -89,16 +89,29 @@ app.post("/addpen", (req, res) => {
         if (!user || err) {
           return res.status(400).json({ message: "err" });
         } else {
-          return res.json({ message: user });
+          return res.json(user);
         }
       }
     );
   }
 });
-app.post("/update/pen", (req, res) => {
-  const { code, id } = req.body;
-  if (!code.html || !id) {
+app.post("/update/pen", async (req, res) => {
+  const { name, id, code } = req.body;
+  if (!name) {
     return res.status(400).json({ message: "Fill Up Details" });
+  } else {
+    await User.findOneAndUpdate(
+      { "pens.name": name, _id: id },
+      { $set: { "pens.$.code": code } },
+      { new: true },
+      (err, pen) => {
+        if (err || !pen) {
+          return res.status(400).json({ message: "Not Found" });
+        } else {
+          return res.json({ message: pen, code });
+        }
+      }
+    );
   }
 });
 const port = process.env.PORT || 5000;
