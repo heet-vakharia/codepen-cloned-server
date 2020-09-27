@@ -2,31 +2,13 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  userid: {
-    type: String,
-    unique: true,
-    required: true,
+  userid: String,
+  password: String,
+  pens: {
+    type: Array,
+    required: false,
+    unique: false,
   },
-  password: {
-    type: String,
-    required: true,
-  },
-  pens: [
-    {
-      name: {
-        type: String,
-      },
-      id: {
-        type: mongoose.Schema.Types.ObjectId,
-        unique: true,
-      },
-      code: {
-        html: String,
-        css: String,
-        js: String,
-      },
-    },
-  ],
 });
 const User = mongoose.model("user", UserSchema);
 export default User;
